@@ -4,8 +4,54 @@
 TEMP_IMAGE="/tmp/ocr_capture.png"
 TEMP_TEXT="/tmp/ocr_result.txt"
 
-# Capture a rectangular area of the screen using Gnome Screenshot
-gnome-screenshot -a -f "$TEMP_IMAGE"
+# Check which DE or compositor is used
+detect_session_type() {
+    if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+        echo "Wayland"
+    elif [ "$XDG_SESSION_TYPE" == "x11" ]; then
+        echo "X11"
+    else
+        echo "Unknown"
+    fi
+}
+
+detect_hyprland() {
+    if pgrep -x "Hyprland" > /dev/null; then
+        echo "Hyprland"
+    else
+        echo "Not Hyprland"
+    fi
+}
+
+# Function to detect the desktop environment (GNOME, etc.)
+detect_desktop_environment() {
+    if [[ "$XDG_CURRENT_DESKTOP" =~ .*GNOME.* ]]; then
+        echo "GNOME"
+    elif [[ "$XDG_CURRENT_DESKTOP" =~ .*Hyprland.* ]]; then
+        echo "Hyprland"
+    else
+        echo "Other"
+    fi
+}
+
+# Main logic: Check session type and desktop environment
+session_type=$(detect_session_type)
+desktop_env=$(detect_desktop_environment)
+hyprland_status=$(detect_hyprland)
+
+echo "Session Type: $session_type"
+echo "Desktop Environment: $desktop_env"
+echo "Hyprland Status: $hyprland_status"
+
+if [ "$hyprland_status" == "Hyprland" ]; then
+    hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | grim -g - "$TEMP_IMAGE"
+elif [ "$session_type" == "Wayland" ] or [ "$desktop_env" == "GNOME" ]; then
+    gnome-screenshot -a -f "$TEMP_IMAGE"
+elif [ "$session_type" == "x11" ]; then
+    scrot -s "$TEMP_IMAGE" 
+else
+    echo "Session and/or environment not supported"
+fi
 
 # Check if the screenshot was successfully captured
 if [ ! -f "$TEMP_IMAGE" ]; then
