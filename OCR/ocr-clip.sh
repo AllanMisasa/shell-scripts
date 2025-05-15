@@ -29,6 +29,8 @@ detect_desktop_environment() {
         echo "GNOME"
     elif [[ "$XDG_CURRENT_DESKTOP" =~ .*Hyprland.* ]]; then
         echo "Hyprland"
+    elif [[ "$XDG_CURRENT_DESKTOP" =~ .*sway.* ]]; then
+        echo "sway"
     else
         echo "Other"
     fi
@@ -45,8 +47,10 @@ echo "Hyprland Status: $hyprland_status"
 
 if [ "$hyprland_status" == "Hyprland" ]; then
     hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | grim -g - "$TEMP_IMAGE"
-elif [ "$session_type" == "Wayland" ] or [ "$desktop_env" == "GNOME" ]; then
+elif [ "$session_type" == "Wayland" ] && [ "$desktop_env" == "GNOME" ]; then
     gnome-screenshot -a -f "$TEMP_IMAGE"
+elif [ "$desktop_env" == "sway" ]; then
+    exec grim -g "$(slurp)" - | tesseract stdin stdout | wl-copy
 elif [ "$session_type" == "x11" ]; then
     scrot -s "$TEMP_IMAGE" 
 else
