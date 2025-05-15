@@ -5,8 +5,9 @@ for file in *; do
     echo $ext
     if [[ $ext == pptx ]]; then
       pptx2md "${file}" -o "${file%.*}".md -i images --enable-slides
-    #elif [[ $ext == docx ]]; then
-    #    
-      marp "${file%.*}.md" -o "${file%.*}.html" --allow-local-files 
+      marp "${file%.*}.md" -o "${file%.*}.html" --allow-local-files
+    elif [[ $ext == docx ]]; then
+      pandoc -f docx -t markdown "${file%.*}.docx" -o "${file%.*}.md"
+      #marp "${file%.*}.md" -o "${file%.*}.html" --allow-local-files
     fi
 done
