@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/janus/shell-scripts/development/test/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

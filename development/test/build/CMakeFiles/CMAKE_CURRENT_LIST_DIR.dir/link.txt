@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--export-dynamic -rdynamic -Wl,--dependency-file=CMakeFiles/CMAKE_CURRENT_LIST_DIR.dir/link.d CMakeFiles/CMAKE_CURRENT_LIST_DIR.dir/src/main.cpp.o -o CMAKE_CURRENT_LIST_DIR  -ljson-c -lcurl

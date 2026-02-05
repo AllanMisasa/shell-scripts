@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/unit_tests.dir/link.d CMakeFiles/unit_tests.dir/src/main.cpp.o -o unit_tests  /usr/lib/libgtest_main.so.1.17.0 /usr/lib/libgtest.so.1.17.0 -ljson-c -lcurl
