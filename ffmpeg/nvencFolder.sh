@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for file in *.mkv *.mp4; do
+for file in *.m4v *.mkv *.mp4; do
     # Check if the file exists to avoid errors
     if [[ -f "$file" ]]; then
         # Extract the filename without its extension
